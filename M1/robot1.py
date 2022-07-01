@@ -8,9 +8,9 @@ class PID:
         self.Kp = kp
         self.Ki = ki
         self.Kd = kd
-        self.PTerm = 0.0
-        self.ITerm = 0.0
-        self.DTerm = 0.0
+        self.P_pid = 0.0
+        self.I_pid = 0.0
+        self.D_pid = 0.0
         self.last_error = 0.0
         self.output = 0.0
         self.sample_time = 0.01
@@ -24,15 +24,15 @@ class PID:
         delta_error = error - self.last_error
 
         if delta_time >= self.sample_time:
-            self.PTerm = self.Kp * error
-            self.ITerm += error * delta_time
+            self.P_pid = self.Kp * error
+            self.I_pid += error * delta_time
             
-            self.DTerm = 0.0
-            self.DTerm = delta_error / delta_time
+            self.D_pid = 0.0
+            self.D_pid = delta_error / delta_time
 
             self.last_time = self.current_time
             self.last_error = error
-            self.output = self.PTerm + (self.Ki * self.ITerm) + (self.Kd * self.DTerm)
+            self.output = self.P_pid + (self.Ki * self.I_pid) + (self.Kd * self.D_pid)
 
 class One_Direction(PID):
     def __init__(self,des_x,des_y):
@@ -62,8 +62,8 @@ class MyRobot1(RCJSoccerRobot):
                 if self.is_new_ball_data():
                     ball_data = self.get_new_ball_data()
                 else:
-                    #self.left_motor.setVelocity(0)
-                    #self.right_motor.setVelocity(0)
+                    # self.left_motor.setVelocity(0)
+                    # self.right_motor.setVelocity(0)
                     continue
                 control.set_direction(self.get_compass_heading())
                 robot_pos = self.get_gps_coordinates()
